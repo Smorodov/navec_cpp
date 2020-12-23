@@ -6,6 +6,7 @@
 #Пример#
 
 ```cpp
+
 #include <locale>
 #include <chrono>
 #include "navec.h"
@@ -25,7 +26,7 @@ public:
     void out(std::string message = "")
     {
         double t = elapsed();
-        std::cout << message << "  elasped time:" << t << "s" << std::endl;
+        std::cout << message << u8"  Затрачено времени:" << t << u8" [с]" << std::endl;
         reset();
     }
 private:
@@ -43,10 +44,29 @@ void main(void)
     std::locale::global(std::locale("ru_RU.UTF8"));
     navec nv;
     nv.loadModel("data/navec_hudlit_v1_12B_500K_300d_100q.npz", "data/words.txt");
+    
+    std::cout << u8"------------------------" << std::endl;
+    std::cout << u8" модель загружена       " << std::endl;
+    std::cout << u8"------------------------" << std::endl;
+    
     Timer timer;
-    float sim = nv.similarity(u8"здравствуйте", u8"привет");
+    std::string word = u8"матрица";
+    std::cout << u8"------------------------" << std::endl;
+    std::cout << u8"Слова, близкие к слову :" << word << std::endl;
+    std::cout << u8"------------------------" << std::endl;
+    float threshold = 0.4;
+
+    for (auto item : nv.words_map)
+    {
+        float sim = nv.similarity(word, item.first);
+        if (sim > threshold)
+        {
+            std::cout << item.first << std::endl;
+        }
+    }
+    
     timer.out();
-    std::cout << u8"Сходство:" << sim << std::endl;   
+   
 }
 ```
 
@@ -65,6 +85,40 @@ vectors=500002
 qdim=100
 dim=300
 centroids=256
-  elasped time:1.26e-05s
-Сходство:0.638147
+------------------------
+ модель загружена
+------------------------
+------------------------
+Слова, близкие к слову :матрица
+------------------------
+matrix
+астральная
+базовая
+виртуальная
+генетическая
+защитная
+институциональная
+информационная
+компьютерная
+личностная
+матриц
+матрица
+матрице
+матрицей
+матрицу
+матрицы
+ментальная
+первичная
+перезагрузка
+проекция
+структура
+сценарная
+трехмерная
+универсальная
+шарры
+энергетическая
+энергоинформационная
+эфирная
+ячейка
+  Затрачено времени:0.473107 [с]
 ```
